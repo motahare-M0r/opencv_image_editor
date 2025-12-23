@@ -5,21 +5,87 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 
-# Read Image
-img = cv2.imread('./img/Penguin.png')
-
-img_resize = cv2.resize(img,(200,100))      
-img_gray = cv2.cvtColor(img_resize,cv2.COLOR_BGR2GRAY)
 
 
+def base():
+    
+    # Read Image
+    img = cv2.imread('./img/Penguin.png')
+
+    img_resize = cv2.resize(img,(200,100))      
+    img_gray = cv2.cvtColor(img_resize,cv2.COLOR_BGR2GRAY)
 
 
-# Display
-plt.figure(figsize=[8,5])
-plt.subplot(131); plt.imshow(img[...,::-1]); plt.title(f'orginal {img.shape}')
-plt.subplot(132); plt.imshow(img_resize[...,::-1]); plt.title(f'image resize {img_resize.shape}')
-plt.subplot(133); plt.imshow(img_gray, cmap='gray'); plt.title(f'gray image  {img_gray.shape}')
+    # Display
+    plt.figure(figsize=[8,5])
+    plt.subplot(131); plt.imshow(img[...,::-1]); plt.title(f'original {img.shape}')
+    plt.subplot(132); plt.imshow(img_resize[...,::-1]); plt.title(f'image resize {img_resize.shape}')
+    plt.subplot(133); plt.imshow(img_gray, cmap='gray'); plt.title(f'gray image  {img_gray.shape}')
 
-plt.show()
+    plt.show()
 
-cv2.imshow('image' , img)
+    cv2.imshow('image' , img)
+
+
+
+# ===== Phase 1: Basic Enhancement =====
+def Image_Enhancement_Basics():
+
+    # Read Image
+    img_bgr = cv2.imread('./img/Penguin.png') 
+    img_rgb = cv2.cvtColor(img_bgr , cv2.COLOR_BGR2RGB)
+
+
+    # Addition or Brightness
+    matrix_brightness = np.ones(img_rgb.shape , dtype='uint8') * 80
+
+    img_brighter = cv2.add(img_rgb , matrix_brightness)
+    img_darker = cv2.subtract(img_rgb , matrix_brightness)
+
+
+
+    # Multiplication or Contrast
+    matrix_contrast_lower = np.ones(img_rgb.shape) * 0.6
+    matrix_contrast_higher = np.ones(img_rgb.shape) * 1.5
+
+    img_contrast_lower = np.uint8(cv2.multiply(np.float64(img_rgb) , matrix_contrast_lower))
+    img_contrast_higher = np.uint8(np.clip(cv2.multiply(np.float64(img_rgb) , matrix_contrast_higher), 0 , 255))
+
+
+
+    # Gaussian Blur / Median Blur
+    img_Gaussian_Blur = cv2.GaussianBlur(img_rgb,(5,5),0) 
+    img_Median_Blur =  cv2.medianBlur(img_rgb,5)
+
+
+
+
+
+    # Display
+    plt.figure(figsize=[10,10])
+
+    plt.subplot(331); plt.imshow(img_darker , cmap='gray'); plt.title('Darker')
+    plt.subplot(332); plt.imshow(img_rgb); plt.title('Original')
+    plt.subplot(333); plt.imshow(img_brighter , cmap='gray'); plt.title('Brighter')
+
+    plt.subplot(334); plt.imshow(img_contrast_lower); plt.title('Lower Contrast')
+    plt.subplot(335); plt.imshow(img_rgb); plt.title('Original')
+    plt.subplot(336); plt.imshow(img_contrast_higher); plt.title('Higher Contrast')
+
+    plt.subplot(337); plt.imshow(img_Gaussian_Blur); plt.title('Gaussian Blur')
+    plt.subplot(338); plt.imshow(img_rgb); plt.title('Original')
+    plt.subplot(339); plt.imshow(img_Median_Blur); plt.title('Median Blur')
+
+
+
+    plt.show()
+    
+# brightness, contrast, blur
+
+
+
+
+
+
+# Result
+Image_Enhancement_Basics()
