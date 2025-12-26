@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 
 
 
-def base():
+def base(img_path):
     
     # Read Image
-    img = cv2.imread('./img/Penguin.png')
+    img = cv2.imread(img_path)
 
     img_resize = cv2.resize(img,(200,100))      
     img_gray = cv2.cvtColor(img_resize,cv2.COLOR_BGR2GRAY)
@@ -29,10 +29,10 @@ def base():
 
 
 # ===== Phase 1: Basic Enhancement =====
-def Image_Enhancement_Basics():
+def Image_Enhancement_Basics(img_path):
 
     # Read Image
-    img_bgr = cv2.imread('./img/Penguin.png') 
+    img_bgr = cv2.imread(img_path) 
     img_rgb = cv2.cvtColor(img_bgr , cv2.COLOR_BGR2RGB)
 
 
@@ -83,9 +83,50 @@ def Image_Enhancement_Basics():
 # brightness, contrast, blur
 
 
+# ===== Phase 2: Denoise & Sharpen =====
+def Noise_Removal_and_Sharpening():
+
+    img_bgr = cv2.imread('./img/mri.png') 
+    img_gray = cv2.cvtColor(img_bgr , cv2.COLOR_BGR2GRAY)
+
+
+    # ========== Part 1: Noise Removal ===========
+    gaussian = cv2.GaussianBlur(img_gray , (5,5) , 0)
+    median = cv2.medianBlur(img_gray , 5)
+    bilateral = cv2.bilateralFilter(img_gray , 9 , 100 , 100)
+
+
+    # ========== Part 2: Sharpening ===========
+    kernel = np.array([[0 , -1 , 0],
+                       [-1 , 5 , -1],
+                       [0 , -1 , 0]])
+    
+    
+    sharpen = cv2.filter2D(median, -1 , kernel)
+    unSharpMask = cv2.addWeighted(median , 1.5 , gaussian , -0.5 , 0)
 
 
 
+
+    # Display
+    plt.figure(figsize=[15,8])
+
+    plt.subplot(231); plt.imshow(img_gray , cmap='gray'); plt.title('Original')
+    plt.subplot(232); plt.imshow(gaussian , cmap='gray'); plt.title('GaussianBlur')
+    plt.subplot(233); plt.imshow(median , cmap='gray'); plt.title('medianBlur')
+    plt.subplot(234); plt.imshow(bilateral , cmap='gray'); plt.title('BilateralFilter')
+    plt.subplot(235); plt.imshow(sharpen , cmap='gray'); plt.title('Sharpening')
+    plt.subplot(236); plt.imshow(unSharpMask , cmap='gray'); plt.title('unSharp Mask')
+
+    plt.show()
+
+
+
+
+
+
+
+image_path = './img/Penguin.png'
 
 # Result
-Image_Enhancement_Basics()
+Noise_Removal_and_Sharpening()
