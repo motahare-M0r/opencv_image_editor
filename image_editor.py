@@ -120,43 +120,86 @@ def Noise_Removal_and_Sharpening():
 
     plt.show()
 
+
+# ===== Phase 3: Thresholding & Binarization =====
 def Thresholding_and_Binarization():
 
     img = cv2.imread('./img/paper1.jpg' , 0)
     
 
     _ , thresh_100 = cv2.threshold(img , 100 , 255 , cv2.THRESH_BINARY)
-    _ , thresh_200 = cv2.threshold(img , 200 , 255 , cv2.THRESH_BINARY)
-    _ , thresh_250 = cv2.threshold(img , 250 , 255 , cv2.THRESH_BINARY)
-
+    
     thresh_adp = cv2.adaptiveThreshold(img , 255 , cv2.ADAPTIVE_THRESH_MEAN_C , cv2.THRESH_BINARY , 11 , 14 )
 
     _ , thresh_OTSU = cv2.threshold(img , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     _ , thresh_Invert = cv2.threshold(img , 120 , 255 , cv2.THRESH_BINARY_INV)
 
 
+    # Morphology
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+    closed = cv2.morphologyEx(thresh_100 , cv2.MORPH_CLOSE , kernel)
+    opened = cv2.morphologyEx(thresh_adp , cv2.MORPH_OPEN , kernel)
+
+    
 
     # Display
     plt.figure(figsize=[8,6])
 
     plt.subplot(241); plt.imshow(img , cmap='gray'); plt.title('Original')
     plt.subplot(242); plt.imshow(thresh_100 , cmap='gray'); plt.title('Thresholding_100')
-    plt.subplot(243); plt.imshow(thresh_200 , cmap='gray'); plt.title('Thresholding_200')
-    plt.subplot(244); plt.imshow(thresh_250 , cmap='gray'); plt.title('Thresholding_250')
+    plt.subplot(243); plt.imshow(thresh_adp , cmap='gray'); plt.title('AdaptiveThreshold')
 
-    plt.subplot(245); plt.imshow(thresh_adp , cmap='gray'); plt.title('AdaptiveThreshold')
+    plt.subplot(244); plt.imshow(thresh_OTSU , cmap='gray'); plt.title('OTSU')
+    plt.subplot(245); plt.imshow(thresh_Invert , cmap='gray'); plt.title('Invert')
 
-    plt.subplot(246); plt.imshow(thresh_OTSU , cmap='gray'); plt.title('OTSU')
-    plt.subplot(247); plt.imshow(thresh_Invert , cmap='gray'); plt.title('Invert')
+    plt.subplot(246); plt.imshow(closed , cmap='gray'); plt.title('Morphology_closed')
+    plt.subplot(247); plt.imshow(opened , cmap='gray'); plt.title('Morphology_opened')
 
 
 
     plt.show()
 
 
+# ===== Phase 4: Edge & Structure Detection =====
+def Edge_and_Structure_Detection(img_path):
+
+    img = cv2.imread(img_path)
+
+    img_gray = cv2.cvtColor(img , cv2.COLOR_BGR2GRAY)
+
+
+    # First Denoise
+    median = cv2.medianBlur(img_gray , 5 )
+
+    # Detection with Canny
+    canny = cv2.Canny(median , 50 , 150)
+
+
+    # Morphology
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+    closed = cv2.morphologyEx(canny , cv2.MORPH_CLOSE , kernel)
+    opened = cv2.morphologyEx(closed , cv2.MORPH_OPEN , kernel)
+
+
+
+    # Display 
+    plt.figure(figsize=[6 , 5])
+
+    plt.subplot(221); plt.imshow(img_gray , cmap='gray'); plt.title('Original')
+    plt.subplot(222); plt.imshow(canny , cmap='gray'); plt.title('Canny')
+    plt.subplot(223); plt.imshow(closed , cmap='gray'); plt.title('closing')
+    plt.subplot(224); plt.imshow(opened , cmap='gray'); plt.title('opening')
+
+
+    plt.show()
 
 
 image_path = './img/Penguin.png'
 
 # Result
+
+#base()
+#Image_Enhancement_Basics(image_path)
+#Noise_Removal_and_Sharpening()
 Thresholding_and_Binarization()
+#Edge_and_Structure_Detection(image_path)
