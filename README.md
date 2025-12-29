@@ -1,8 +1,8 @@
 # OpenCV Image Editor
 
-A step-by-step image processing project built with **OpenCV** and **Python**, focusing on image enhancement techniques and preparing images for further computer vision tasks.
+A step-by-step image processing project built with **OpenCV** and **Python**, focusing on image enhancement, segmentation, and structural analysis as preparation for advanced computer vision tasks.
 
-This project is developed incrementally in multiple phases, each introducing new image processing concepts.
+This project is developed incrementally in multiple phases, where each phase introduces new image processing concepts and techniques.
 
 ---
 
@@ -11,8 +11,6 @@ This project is developed incrementally in multiple phases, each introducing new
 - OpenCV
 - NumPy
 - Matplotlib
-
----
 
 ---
 
@@ -38,32 +36,80 @@ This phase introduces fundamental image enhancement operations.
 
 ## Phase 2 – Noise Removal & Sharpening (v0.2)
 
-This phase focuses on improving image quality, especially for **medical images, scans, and low-quality cameras**.
+This phase focuses on improving image quality, especially for medical images, scanned documents, and low-quality cameras.
 
-### Noise Reduction
-The following denoising techniques are applied on grayscale images:
-
+### Noise Reduction Techniques
 - **Gaussian Blur**  
-  Suitable for reducing smooth Gaussian noise.
-
+  Reduces smooth Gaussian noise.
 - **Median Blur**  
-  Effective for removing impulse (salt-and-pepper) noise while preserving edges.
-
+  Removes salt-and-pepper noise while preserving edges.
 - **Bilateral Filter**  
-  Reduces noise while preserving edges, commonly used in medical imaging.
+  Reduces noise while preserving edges.
 
-### Sharpening
-Sharpening is applied **after noise removal** to avoid amplifying noise.
+### Sharpening Techniques
+- **Kernel-based Sharpening**
+- **Unsharp Masking**
 
-- **Kernel-based Sharpening**  
-  A convolution kernel is used to enhance edges.
-
-- **Unsharp Masking**  
-  Enhances structural details by combining the denoised image with a blurred version.
-
+### Purpose
+- Improve image clarity
+- Reduce noise without destroying edges
+- Enhance structural details
 
 ---
 
+## Phase 3 – Thresholding & Binarization (v0.3)
 
-```python
-Noise_Removal_and_Sharpening()
+This phase introduces image segmentation fundamentals using thresholding techniques.
+
+### Implemented Techniques
+- Global Thresholding
+- Adaptive Thresholding (Mean method)
+- Otsu’s Thresholding
+- Binary Inversion
+
+### Morphological Operations
+- Closing (fill small holes and gaps)
+- Opening (remove small noise)
+
+### Purpose
+- Convert grayscale images into binary representations
+- Separate foreground from background
+- Prepare images for structural analysis
+
+---
+
+## Phase 4 – Edge & Structure Detection (v0.4)
+
+This phase focuses on extracting edges and structural information from images.
+
+### Processing Pipeline
+- Grayscale conversion
+- Noise reduction using Median Blur
+- Edge detection using Canny
+- Morphological refinement:
+  - Closing
+  - Opening
+
+### Purpose
+- Extract meaningful edges
+- Improve edge continuity
+- Generate structural representations for higher-level vision tasks
+
+---
+
+## Project Design
+
+The project is designed incrementally, where each phase builds on the previous one:
+
+- Phase 1: Image enhancement
+- Phase 2: Noise removal and sharpening
+- Phase 3: Thresholding and binarization
+- Phase 4: Edge and structure detection
+
+This modular design allows easy extension toward:
+- Contour detection
+- Shape analysis
+- Object segmentation
+- Document and map processing
+
+---
